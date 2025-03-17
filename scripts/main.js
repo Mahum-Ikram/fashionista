@@ -1,38 +1,69 @@
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function addToCart(product, price) {
-    cart.push({ product, price });
+    let existingItem = cart.find(item => item.product === product);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ product, price, quantity: 1 });
+    }
+
+    saveCart();
     updateCart();
 }
 
 function updateCart() {
-    let cartList = document.getElementById('cart-list');
+    let cartItems = document.getElementById('cart-items');
     let totalElement = document.getElementById('cart-total');
 
-    if (cartList && totalElement) {
-        cartList.innerHTML = '';
-        let total = 0;
+    if (!cartItems || !totalElement) return;
 
-        cart.forEach(item => {
-            let li = document.createElement('li');
-            li.innerText = `${item.product} - $${item.price}`;
-            cartList.appendChild(li);
-            total += item.price;
-        });
+    cartItems.innerHTML = '';
+    let total = 0;
 
-        totalElement.innerText = total.toFixed(2);
-    }
+    cart.forEach((item, index) => {
+        let row = document.createElement('tr');
+        let itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        row.innerHTML = `
+            <td>${item.product}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>
+                <button onclick="changeQuantity(${index}, -1)">-</button>
+                ${item.quantity}
+                <button onclick="changeQuantity(${index}, 1)">+</button>
+            </td>
+            <td>$${itemTotal.toFixed(2)}</td>
+            <td><button class="remove-btn" onclick="removeFromCart(${index})">X</button></td>
+        `;
+
+        cartItems.appendChild(row);
+    });
+
+    totalElement.innerText = total.toFixed(2);
 }
 
-document.getElementById('categoryFilter')?.addEventListener('change', function() {
-    let selectedCategory = this.value;
-    let products = document.querySelectorAll('.product');
+function changeQuantity(index, amount) {
+    cart[index].quantity += amount;
 
-    products.forEach(product => {
-        if (selectedCategory === "all" || product.getAttribute('data-category') === selectedCategory) {
-            product.style.display = "block";
-        } else {
-            product.style.display = "none";
-        }
-    });
-});
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    saveCart();
+    updateCart();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    updateCart();
+}
+
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+document.addEventListener("DOMContentLoaded", updateCart);
