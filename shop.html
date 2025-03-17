@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Fashion Wardrobe</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Shop</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html">🛒 Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="filters">
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+        </select>
+    </section>
+
+    <section class="product-list">
+        <div class="product" data-category="men">
+            <img src="images/men1.jpg" alt="Men's Fashion">
+            <h3>Men's Jacket</h3>
+            <p>$49.99</p>
+            <button onclick="addToCart('Men\'s Jacket', 49.99)">Add to Cart</button>
+        </div>
+
+        <div class="product" data-category="women">
+            <img src="images/women1.jpg" alt="Women's Fashion">
+            <h3>Women's Dress</h3>
+            <p>$59.99</p>
+            <button onclick="addToCart('Women\'s Dress', 59.99)">Add to Cart</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Fashion Wardrobe</p>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>
